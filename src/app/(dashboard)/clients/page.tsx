@@ -24,8 +24,8 @@ export default function ClientsPage() {
       label: 'Nom',
       render: (c: Client) => `${c.first_name} ${c.last_name}`,
     },
-    { key: 'email', label: 'Email' },
-    { key: 'phone', label: 'Téléphone', render: (c: Client) => c.phone ?? '-' },
+    { key: 'phone', label: 'Téléphone', render: (c: Client) => `${c.country_code} ${c.phone}` },
+    { key: 'email', label: 'Email', render: (c: Client) => c.email ?? '-' },
     {
       key: 'ticket_requests_count',
       label: 'Tickets',

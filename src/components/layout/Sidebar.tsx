@@ -13,6 +13,7 @@ import {
   UserCircle,
   Dices,
   ScrollText,
+  Settings,
   LogOut,
 } from 'lucide-react';
 
@@ -24,6 +25,7 @@ const navigation = [
   { name: 'Clients', href: '/clients', icon: UserCircle, minLevel: 2 },
   { name: 'Utilisateurs', href: '/users', icon: Users, minLevel: 2 },
   { name: 'Journal', href: '/audit-logs', icon: ScrollText, minLevel: 2 },
+  { name: 'Configuration', href: '/settings', icon: Settings, minLevel: 3 },
 ];
 
 export default function Sidebar() {
