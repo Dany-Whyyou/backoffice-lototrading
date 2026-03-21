@@ -9,7 +9,7 @@ export default function RootPage() {
 
   useEffect(() => {
     if (isAuthenticated()) {
-      router.replace('/dashboard');
+      router.replace('/tickets/pending');
     } else {
       router.replace('/login');
     }
