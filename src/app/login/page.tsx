@@ -18,7 +18,7 @@ export default function LoginPage() {
     setLoading(true);
     try {
       await login(email, password);
-      router.push('/tickets/pending');
+      router.push('/');
     } catch {
       setError('Identifiants incorrects');
     } finally {
