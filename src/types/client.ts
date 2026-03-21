@@ -1,3 +1,5 @@
+import type { TicketRequest } from './ticket';
+
 export interface Client {
   id: number;
   first_name: string;
@@ -7,5 +9,6 @@ export interface Client {
   email: string | null;
   is_active: boolean;
   ticket_requests_count?: number;
+  ticket_requests?: TicketRequest[];
   created_at: string;
 }

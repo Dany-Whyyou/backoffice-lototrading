@@ -18,7 +18,7 @@ import {
 } from 'lucide-react';
 
 const navigation = [
-  { name: 'Dashboard', href: '/', icon: LayoutDashboard, minLevel: 2 },
+  { name: 'Dashboard', href: '/', icon: LayoutDashboard, minLevel: 1 },
   { name: 'Tickets en attente', href: '/tickets/pending', icon: Ticket, minLevel: 1 },
   { name: 'Tickets validés', href: '/tickets/validated', icon: CheckCircle, minLevel: 1 },
   { name: 'Lotos', href: '/lotteries', icon: Dices, minLevel: 3 },
@@ -46,7 +46,9 @@ export default function Sidebar() {
         {navigation
           .filter((item) => userLevel >= item.minLevel)
           .map((item) => {
-            const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
+            const isActive = item.href === '/'
+              ? pathname === '/'
+              : pathname === item.href || pathname.startsWith(item.href + '/');
             return (
               <Link
                 key={item.name}
