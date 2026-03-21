@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/useAuth';
-import { ROLE_LEVELS } from '@/constants/roles';
+import { ROLE_LEVELS, ROLE_LABELS } from '@/constants/roles';
 import {
   LayoutDashboard,
   Ticket,
@@ -18,14 +18,15 @@ import {
 } from 'lucide-react';
 
 const navigation = [
-  { name: 'Dashboard', href: '/', icon: LayoutDashboard, minLevel: 1 },
-  { name: 'Tickets en attente', href: '/tickets/pending', icon: Ticket, minLevel: 1 },
-  { name: 'Tickets validés', href: '/tickets/validated', icon: CheckCircle, minLevel: 1 },
-  { name: 'Lotos', href: '/lotteries', icon: Dices, minLevel: 3 },
-  { name: 'Clients', href: '/clients', icon: UserCircle, minLevel: 2 },
-  { name: 'Utilisateurs', href: '/users', icon: Users, minLevel: 2 },
-  { name: 'Journal', href: '/audit-logs', icon: ScrollText, minLevel: 2 },
-  { name: 'Configuration', href: '/settings', icon: Settings, minLevel: 3 },
+  // Gestion
+  { name: 'Dashboard', href: '/', icon: LayoutDashboard, minLevel: 1, section: 'Tableau de bord' },
+  { name: 'Tickets en attente', href: '/tickets/pending', icon: Ticket, minLevel: 1, section: 'Gestion' },
+  { name: 'Tickets valides', href: '/tickets/validated', icon: CheckCircle, minLevel: 1, section: 'Gestion' },
+  { name: 'Clients', href: '/clients', icon: UserCircle, minLevel: 2, section: 'Gestion' },
+  { name: 'Lotos', href: '/lotteries', icon: Dices, minLevel: 3, section: 'Administration' },
+  { name: 'Utilisateurs', href: '/users', icon: Users, minLevel: 2, section: 'Administration' },
+  { name: 'Journal', href: '/audit-logs', icon: ScrollText, minLevel: 2, section: 'Administration' },
+  { name: 'Configuration', href: '/settings', icon: Settings, minLevel: 3, section: 'Administration' },
 ];
 
 export default function Sidebar() {
@@ -35,49 +36,67 @@ export default function Sidebar() {
   if (!user) return null;
 
   const userLevel = ROLE_LEVELS[user.role];
+  const filteredNav = navigation.filter((item) => userLevel >= item.minLevel);
+
+  // Group items by section
+  let lastSection = '';
 
   return (
-    <aside className="flex h-screen w-64 flex-col bg-gray-900 text-white">
-      <div className="flex h-16 items-center justify-center border-b border-gray-800">
-        <h1 className="text-xl font-bold">LotoTrading</h1>
+    <aside className="flex h-screen w-64 flex-col bg-gradient-to-b from-gray-900 via-gray-900 to-gray-950 text-white">
+      {/* Logo */}
+      <div className="flex h-16 items-center gap-3 px-5 border-b border-white/5">
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600">
+          <Dices className="h-4 w-4 text-white" />
+        </div>
+        <h1 className="text-lg font-bold tracking-tight">LotoTrading</h1>
       </div>
 
-      <nav className="flex-1 space-y-1 px-3 py-4">
-        {navigation
-          .filter((item) => userLevel >= item.minLevel)
-          .map((item) => {
-            const isActive = item.href === '/'
-              ? pathname === '/'
-              : pathname === item.href || pathname.startsWith(item.href + '/');
-            return (
+      {/* Navigation */}
+      <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-0.5">
+        {filteredNav.map((item) => {
+          const showSectionHeader = item.section !== lastSection;
+          lastSection = item.section;
+
+          const isActive = item.href === '/'
+            ? pathname === '/'
+            : pathname === item.href || pathname.startsWith(item.href + '/');
+
+          return (
+            <div key={item.name}>
+              {showSectionHeader && (
+                <p className="px-3 pt-4 pb-1.5 text-[10px] font-semibold uppercase tracking-widest text-gray-500 first:pt-0">
+                  {item.section}
+                </p>
+              )}
               <Link
-                key={item.name}
                 href={item.href}
                 className={cn(
-                  'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+                  'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-150',
                   isActive
-                    ? 'bg-gray-800 text-white'
-                    : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                    ? 'bg-white/10 text-white border-l-2 border-blue-500 ml-0 pl-[10px]'
+                    : 'text-gray-400 hover:bg-white/5 hover:text-gray-200 border-l-2 border-transparent ml-0 pl-[10px]'
                 )}
               >
-                <item.icon className="h-5 w-5" />
+                <item.icon className={cn('h-[18px] w-[18px]', isActive ? 'text-blue-400' : '')} />
                 {item.name}
               </Link>
-            );
-          })}
+            </div>
+          );
+        })}
       </nav>
 
-      <div className="border-t border-gray-800 p-4">
-        <div className="mb-3 text-sm">
-          <p className="font-medium">{user.name}</p>
-          <p className="text-gray-400 text-xs">{user.role}</p>
+      {/* User section */}
+      <div className="border-t border-white/5 p-4">
+        <div className="mb-3 px-1">
+          <p className="text-sm font-medium text-gray-200">{user.name}</p>
+          <p className="text-xs text-gray-500 mt-0.5">{ROLE_LABELS[user.role]}</p>
         </div>
         <button
           onClick={logout}
-          className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-400 hover:bg-gray-800 hover:text-white"
+          className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-400 transition-all hover:bg-white/5 hover:text-gray-200"
         >
           <LogOut className="h-4 w-4" />
-          Déconnexion
+          Deconnexion
         </button>
       </div>
     </aside>
