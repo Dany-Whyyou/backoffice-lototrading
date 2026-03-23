@@ -203,48 +203,90 @@ export default function ClientDetailPage({ params }: { params: Promise<{ id: str
             )}
           </div>
 
-          {/* Document image */}
-          {client.kyc_document_path && (
-            <div className="mb-5">
+          {/* Document & Selfie images */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+            {/* Document */}
+            <div>
               <p className="text-gray-400 text-xs mb-2">Document soumis</p>
-              <div className="relative rounded-lg border border-gray-200 overflow-hidden bg-gray-50 max-w-md">
-                <a
-                  href={getDocumentUrl(client.kyc_document_path)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block"
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={getDocumentUrl(client.kyc_document_path)}
-                    alt="Document KYC"
-                    className="w-full h-auto max-h-96 object-contain"
-                    onError={(e) => {
-                      const target = e.currentTarget;
-                      target.style.display = 'none';
-                      const fallback = target.nextElementSibling;
-                      if (fallback) (fallback as HTMLElement).style.display = 'flex';
-                    }}
-                  />
-                  <div className="hidden items-center justify-center h-48 text-gray-400">
-                    <div className="text-center">
-                      <ImageIcon className="h-8 w-8 mx-auto mb-2" />
-                      <p className="text-xs">Impossible de charger le document</p>
+              {client.kyc_document_path ? (
+                <div className="relative rounded-lg border border-gray-200 overflow-hidden bg-gray-50">
+                  <a
+                    href={getDocumentUrl(client.kyc_document_path)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block"
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={getDocumentUrl(client.kyc_document_path)}
+                      alt="Document KYC"
+                      className="w-full h-auto max-h-72 object-contain"
+                      onError={(e) => {
+                        const target = e.currentTarget;
+                        target.style.display = 'none';
+                        const fallback = target.nextElementSibling;
+                        if (fallback) (fallback as HTMLElement).style.display = 'flex';
+                      }}
+                    />
+                    <div className="hidden items-center justify-center h-48 text-gray-400">
+                      <div className="text-center">
+                        <ImageIcon className="h-8 w-8 mx-auto mb-2" />
+                        <p className="text-xs">Impossible de charger le document</p>
+                      </div>
                     </div>
+                  </a>
+                </div>
+              ) : (
+                <div className="flex items-center justify-center h-32 rounded-lg border border-dashed border-gray-200 bg-gray-50 text-gray-400">
+                  <div className="text-center">
+                    <ImageIcon className="h-6 w-6 mx-auto mb-1.5" />
+                    <p className="text-xs">Aucun document soumis</p>
                   </div>
-                </a>
-              </div>
+                </div>
+              )}
             </div>
-          )}
 
-          {!client.kyc_document_path && (
-            <div className="mb-5 flex items-center justify-center h-32 rounded-lg border border-dashed border-gray-200 bg-gray-50 text-gray-400">
-              <div className="text-center">
-                <ImageIcon className="h-6 w-6 mx-auto mb-1.5" />
-                <p className="text-xs">Aucun document soumis</p>
-              </div>
+            {/* Selfie */}
+            <div>
+              <p className="text-gray-400 text-xs mb-2">Selfie de verification</p>
+              {client.kyc_selfie_path ? (
+                <div className="relative rounded-lg border border-gray-200 overflow-hidden bg-gray-50">
+                  <a
+                    href={getDocumentUrl(client.kyc_selfie_path)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block"
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={getDocumentUrl(client.kyc_selfie_path)}
+                      alt="Selfie KYC"
+                      className="w-full h-auto max-h-72 object-contain"
+                      onError={(e) => {
+                        const target = e.currentTarget;
+                        target.style.display = 'none';
+                        const fallback = target.nextElementSibling;
+                        if (fallback) (fallback as HTMLElement).style.display = 'flex';
+                      }}
+                    />
+                    <div className="hidden items-center justify-center h-48 text-gray-400">
+                      <div className="text-center">
+                        <ImageIcon className="h-8 w-8 mx-auto mb-2" />
+                        <p className="text-xs">Impossible de charger le selfie</p>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+              ) : (
+                <div className="flex items-center justify-center h-32 rounded-lg border border-dashed border-gray-200 bg-gray-50 text-gray-400">
+                  <div className="text-center">
+                    <ImageIcon className="h-6 w-6 mx-auto mb-1.5" />
+                    <p className="text-xs">Aucun selfie soumis</p>
+                  </div>
+                </div>
+              )}
             </div>
-          )}
+          </div>
 
           {/* Approved status info */}
           {client.kyc_status === 'approved' && (
