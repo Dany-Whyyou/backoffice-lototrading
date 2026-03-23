@@ -47,9 +47,7 @@ export default function Sidebar() {
     <aside className="flex h-screen w-64 flex-col bg-gradient-to-b from-gray-900 via-gray-900 to-gray-950 text-white">
       {/* Logo */}
       <div className="flex h-16 items-center gap-3 px-5 border-b border-white/5">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600">
-          <Dices className="h-4 w-4 text-white" />
-        </div>
+        <img src="/logo.png" alt="LotoTrading" className="h-8 w-8 rounded-lg object-contain" />
         <h1 className="text-lg font-bold tracking-tight">LotoTrading</h1>
       </div>
 
