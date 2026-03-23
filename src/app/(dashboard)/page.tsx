@@ -6,7 +6,7 @@ import Header from '@/components/layout/Header';
 import StatusBadge from '@/components/ui/StatusBadge';
 import api from '@/lib/api';
 import { formatDate } from '@/lib/utils';
-import { Ticket, Users, CheckCircle, Clock, TrendingUp, AlertCircle, ChevronRight } from 'lucide-react';
+import { Ticket, Users, CheckCircle, Clock, TrendingUp, AlertCircle, ChevronRight, ShieldCheck } from 'lucide-react';
 import type { TicketRequest } from '@/types/ticket';
 
 interface DashboardData {
@@ -19,6 +19,7 @@ interface DashboardData {
   active_clients: number;
   total_clients: number;
   new_clients_today: number;
+  pending_kyc: number;
   recent_tickets: TicketRequest[];
 }
 
@@ -52,6 +53,7 @@ export default function DashboardPage() {
     { label: "Valides aujourd'hui", value: data.validated_today, icon: CheckCircle, color: 'text-green-600', bg: 'bg-green-50', iconBg: 'bg-green-100', ring: 'ring-green-200' },
     { label: 'Total valides', value: data.total_validated, icon: TrendingUp, color: 'text-indigo-600', bg: 'bg-indigo-50', iconBg: 'bg-indigo-100', ring: 'ring-indigo-200' },
     { label: 'Clients actifs', value: data.active_clients, icon: Users, color: 'text-cyan-600', bg: 'bg-cyan-50', iconBg: 'bg-cyan-100', ring: 'ring-cyan-200' },
+    { label: 'KYC en attente', value: data.pending_kyc ?? 0, icon: ShieldCheck, color: 'text-orange-600', bg: 'bg-orange-50', iconBg: 'bg-orange-100', ring: 'ring-orange-200' },
     { label: 'Total tickets', value: data.total_tickets, icon: Ticket, color: 'text-gray-600', bg: 'bg-gray-50', iconBg: 'bg-gray-100', ring: 'ring-gray-200' },
   ];
 

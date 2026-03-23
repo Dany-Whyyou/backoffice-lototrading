@@ -7,6 +7,7 @@ import Header from '@/components/layout/Header';
 import api from '@/lib/api';
 import { formatDate } from '@/lib/utils';
 import { Search, RefreshCw, UserCircle, ChevronRight } from 'lucide-react';
+import { KYC_STATUS_LABELS, KYC_STATUS_COLORS } from '@/constants/kycStatus';
 import type { Client } from '@/types/client';
 
 export default function ClientsPage() {
@@ -86,6 +87,7 @@ export default function ClientsPage() {
                   <th className="px-6 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">Telephone</th>
                   <th className="px-6 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">Email</th>
                   <th className="px-6 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">Tickets</th>
+                  <th className="px-6 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">KYC</th>
                   <th className="px-6 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">Statut</th>
                   <th className="px-6 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">Inscrit le</th>
                   <th className="px-3 py-3.5" />
@@ -106,6 +108,14 @@ export default function ClientsPage() {
                     <td className="px-6 py-4">
                       <span className="inline-flex items-center justify-center h-6 min-w-[1.5rem] rounded-full bg-blue-50 text-xs font-semibold text-blue-700">
                         {c.ticket_requests_count ?? 0}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className={
+                        'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset ' +
+                        (KYC_STATUS_COLORS[c.kyc_status] || 'bg-gray-100 text-gray-700 ring-gray-600/20')
+                      }>
+                        {KYC_STATUS_LABELS[c.kyc_status] || c.kyc_status}
                       </span>
                     </td>
                     <td className="px-6 py-4">
