@@ -28,7 +28,7 @@ interface ClientDetail {
 
 function getDocumentUrl(path: string): string {
   const base = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'https://loto-trading.project-preview.ovh';
-  return `${base}/storage/${path}`;
+  return `${base}/${path}`;
 }
 
 export default function ClientDetailPage({ params }: { params: Promise<{ id: string }> }) {
