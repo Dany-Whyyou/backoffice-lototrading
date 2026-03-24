@@ -84,6 +84,11 @@ export default function LotteriesPage() {
                         + {l.rule.bonus_numbers_count} bonus
                       </span>
                     ) : null}
+                    {l.rule.price && (
+                      <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 font-semibold text-green-700 ring-1 ring-inset ring-green-600/20">
+                        {Number(l.rule.price).toLocaleString('fr-FR')} {l.rule.currency === 'XAF' ? 'FCFA' : l.rule.currency}
+                      </span>
+                    )}
                   </div>
                 )}
                 <ChevronRight className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-300 opacity-0 transition-opacity group-hover:opacity-100" />
