@@ -16,12 +16,14 @@ import {
   Settings,
   LogOut,
   ShieldCheck,
+  Clock,
 } from 'lucide-react';
 
 const navigation = [
   // Gestion
   { name: 'Dashboard', href: '/', icon: LayoutDashboard, minLevel: 1, section: 'Tableau de bord' },
   { name: 'Tickets en attente', href: '/tickets/pending', icon: Ticket, minLevel: 1, section: 'Gestion' },
+  { name: 'Tickets en cours', href: '/tickets/processing', icon: Clock, minLevel: 1, section: 'Gestion' },
   { name: 'Tickets valides', href: '/tickets/validated', icon: CheckCircle, minLevel: 1, section: 'Gestion' },
   { name: 'KYC en attente', href: '/kyc', icon: ShieldCheck, minLevel: 1, section: 'Gestion' },
   { name: 'Clients', href: '/clients', icon: UserCircle, minLevel: 2, section: 'Gestion' },

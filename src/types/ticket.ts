@@ -28,10 +28,12 @@ export interface TicketRequest {
   lottery_id: number;
   status: TicketStatus;
   notes: string | null;
+  processed_by?: number | null;
   created_at: string;
   updated_at: string;
   client?: Client;
   lottery?: Lottery;
   selections?: TicketSelection[];
   validated_ticket?: ValidatedTicket | null;
+  processor?: User | null;
 }
