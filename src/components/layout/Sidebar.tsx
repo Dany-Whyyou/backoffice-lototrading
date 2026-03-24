@@ -18,6 +18,7 @@ import {
   ShieldCheck,
   Clock,
   CreditCard,
+  Ban,
 } from 'lucide-react';
 
 const navigation = [
@@ -26,6 +27,7 @@ const navigation = [
   { name: 'Tickets en attente', href: '/tickets/pending', icon: Ticket, minLevel: 1, section: 'Gestion' },
   { name: 'Tickets en cours', href: '/tickets/processing', icon: Clock, minLevel: 1, section: 'Gestion' },
   { name: 'Tickets valides', href: '/tickets/validated', icon: CheckCircle, minLevel: 1, section: 'Gestion' },
+  { name: 'Tickets annules', href: '/tickets/cancelled', icon: Ban, minLevel: 1, section: 'Gestion' },
   { name: 'KYC en attente', href: '/kyc', icon: ShieldCheck, minLevel: 1, section: 'Gestion' },
   { name: 'Transactions', href: '/payments', icon: CreditCard, minLevel: 2, section: 'Gestion' },
   { name: 'Clients', href: '/clients', icon: UserCircle, minLevel: 2, section: 'Gestion' },
