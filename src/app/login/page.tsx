@@ -31,7 +31,8 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-gray-100">
       <div className="w-full max-w-md rounded-xl bg-white p-8 shadow-lg">
         <img src="/logo.png" alt="LotoTrading" className="mx-auto mb-4 h-16 w-auto" />
-        <h1 className="mb-6 text-center text-2xl font-bold text-gray-900">LotoTrading</h1>
+        <h1 className="mb-1 text-center text-2xl font-bold text-gray-900">LotoTrading</h1>
+        <p className="mb-4 text-right text-[10px] italic text-gray-400 pr-4">by JLM6.net</p>
         <p className="mb-8 text-center text-sm text-gray-500">Connectez-vous au backoffice</p>
 
         <form onSubmit={handleSubmit} className="space-y-4">

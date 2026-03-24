@@ -50,7 +50,10 @@ export default function Sidebar() {
       {/* Logo */}
       <div className="flex h-16 items-center gap-3 px-5 border-b border-white/5">
         <img src="/logo.png" alt="LotoTrading" className="h-8 w-8 rounded-lg object-contain" />
-        <h1 className="text-lg font-bold tracking-tight">LotoTrading</h1>
+        <div>
+          <h1 className="text-lg font-bold tracking-tight leading-tight">LotoTrading</h1>
+          <p className="text-[9px] italic text-gray-500 text-right -mt-0.5">by JLM6.net</p>
+        </div>
       </div>
 
       {/* Navigation */}
