@@ -17,6 +17,7 @@ import {
   LogOut,
   ShieldCheck,
   Clock,
+  CreditCard,
 } from 'lucide-react';
 
 const navigation = [
@@ -26,6 +27,7 @@ const navigation = [
   { name: 'Tickets en cours', href: '/tickets/processing', icon: Clock, minLevel: 1, section: 'Gestion' },
   { name: 'Tickets valides', href: '/tickets/validated', icon: CheckCircle, minLevel: 1, section: 'Gestion' },
   { name: 'KYC en attente', href: '/kyc', icon: ShieldCheck, minLevel: 1, section: 'Gestion' },
+  { name: 'Transactions', href: '/payments', icon: CreditCard, minLevel: 2, section: 'Gestion' },
   { name: 'Clients', href: '/clients', icon: UserCircle, minLevel: 2, section: 'Gestion' },
   { name: 'Lotos', href: '/lotteries', icon: Dices, minLevel: 3, section: 'Administration' },
   { name: 'Utilisateurs', href: '/users', icon: Users, minLevel: 2, section: 'Administration' },
