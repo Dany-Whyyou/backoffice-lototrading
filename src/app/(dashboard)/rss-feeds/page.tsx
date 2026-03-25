@@ -6,7 +6,7 @@ import Header from '@/components/layout/Header';
 import Button from '@/components/ui/Button';
 import api from '@/lib/api';
 import { formatDate } from '@/lib/utils';
-import { Rss, Trash2, Plus, ExternalLink, Loader2 } from 'lucide-react';
+import { Rss, Trash2, Plus, ExternalLink, Loader2, Pencil } from 'lucide-react';
 
 interface RssFeed {
   id: number;
@@ -25,6 +25,9 @@ export default function RssFeedsPage() {
   const [savingMax, setSavingMax] = useState(false);
   const [loadingId, setLoadingId] = useState<number | null>(null);
   const [deletingId, setDeletingId] = useState<number | null>(null);
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editForm, setEditForm] = useState({ name: '', url: '' });
+  const [savingEdit, setSavingEdit] = useState(false);
 
   const { data: feeds = [], isLoading } = useQuery({
     queryKey: ['rss-feeds'],
@@ -49,6 +52,23 @@ export default function RssFeedsPage() {
       queryClient.invalidateQueries({ queryKey: ['rss-feeds'] });
     } finally {
       setSavingFeed(false);
+    }
+  };
+
+  const startEdit = (feed: RssFeed) => {
+    setEditingId(feed.id);
+    setEditForm({ name: feed.name, url: feed.url });
+  };
+
+  const handleSaveEdit = async () => {
+    if (!editingId || !editForm.name || !editForm.url || savingEdit) return;
+    setSavingEdit(true);
+    try {
+      await api.put(`/admin/rss-feeds/${editingId}`, editForm);
+      setEditingId(null);
+      queryClient.invalidateQueries({ queryKey: ['rss-feeds'] });
+    } finally {
+      setSavingEdit(false);
     }
   };
 
@@ -180,7 +200,40 @@ export default function RssFeedsPage() {
             {feeds.map((feed) => {
               const isToggling = loadingId === feed.id;
               const isDeleting = deletingId === feed.id;
-              const isBusy = isToggling || isDeleting;
+              const isEditing = editingId === feed.id;
+              const isBusy = isToggling || isDeleting || savingEdit;
+
+              if (isEditing) {
+                return (
+                  <div key={feed.id} className="rounded-xl bg-white p-4 ring-1 ring-blue-200 space-y-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <input
+                        type="text"
+                        value={editForm.name}
+                        onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                        disabled={savingEdit}
+                        placeholder="Nom du flux"
+                        className="rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 disabled:opacity-50"
+                      />
+                      <input
+                        type="url"
+                        value={editForm.url}
+                        onChange={(e) => setEditForm({ ...editForm, url: e.target.value })}
+                        disabled={savingEdit}
+                        placeholder="URL du flux RSS"
+                        className="rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 disabled:opacity-50"
+                      />
+                    </div>
+                    <div className="flex gap-2">
+                      <Button onClick={handleSaveEdit} disabled={savingEdit} size="sm">
+                        {savingEdit && <Loader2 className="h-3 w-3 mr-1 animate-spin" />}
+                        {savingEdit ? 'Enregistrement...' : 'Enregistrer'}
+                      </Button>
+                      <button onClick={() => setEditingId(null)} disabled={savingEdit} className="text-sm text-gray-500 hover:text-gray-700 disabled:opacity-50">Annuler</button>
+                    </div>
+                  </div>
+                );
+              }
 
               return (
                 <div
@@ -208,6 +261,13 @@ export default function RssFeedsPage() {
                       className="p-1.5 rounded-lg text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition-colors">
                       <ExternalLink className="h-4 w-4" />
                     </a>
+                    <button
+                      onClick={() => startEdit(feed)}
+                      disabled={isBusy}
+                      className="p-1.5 rounded-lg text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </button>
                     <button
                       onClick={() => handleToggle(feed)}
                       disabled={isBusy}
