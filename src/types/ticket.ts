@@ -29,6 +29,7 @@ export interface TicketRequest {
   status: TicketStatus;
   notes: string | null;
   processed_by?: number | null;
+  play_date?: string | null;
   created_at: string;
   updated_at: string;
   client?: Client;

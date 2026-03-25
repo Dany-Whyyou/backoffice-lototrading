@@ -56,6 +56,7 @@ export default function CancelledTicketsPage() {
                   <th className="px-6 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">Client</th>
                   <th className="px-6 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">Loto</th>
                   <th className="px-6 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">Raison</th>
+                  <th className="px-6 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">Tirage</th>
                   <th className="px-6 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">Statut</th>
                   <th className="px-6 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">Date</th>
                   <th className="px-3 py-3.5" />
@@ -74,6 +75,7 @@ export default function CancelledTicketsPage() {
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-600">{t.lottery?.name ?? '-'}</td>
                     <td className="px-6 py-4 text-sm text-gray-500 max-w-[200px] truncate">{t.notes ?? '-'}</td>
+                    <td className="px-6 py-4 text-sm text-gray-600">{t.play_date ? formatDate(t.play_date) : '-'}</td>
                     <td className="px-6 py-4"><StatusBadge status={t.status} /></td>
                     <td className="px-6 py-4 text-sm text-gray-400">{formatDate(t.created_at)}</td>
                     <td className="px-3 py-4"><ChevronRight className="h-4 w-4 text-gray-300" /></td>

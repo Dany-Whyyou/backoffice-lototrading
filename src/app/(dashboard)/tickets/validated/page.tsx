@@ -57,6 +57,7 @@ export default function ValidatedTicketsPage() {
                   <th className="px-6 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">Loto</th>
                   <th className="px-6 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">N. Ticket officiel</th>
                   <th className="px-6 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">Operateur</th>
+                  <th className="px-6 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">Tirage</th>
                   <th className="px-6 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">Statut</th>
                   <th className="px-6 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">Valide le</th>
                   <th className="px-3 py-3.5" />
@@ -80,6 +81,7 @@ export default function ValidatedTicketsPage() {
                       </span>
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-600">{t.validated_ticket?.operator?.name ?? '-'}</td>
+                    <td className="px-6 py-4 text-sm text-gray-600">{t.play_date ? formatDate(t.play_date) : '-'}</td>
                     <td className="px-6 py-4"><StatusBadge status={t.status} /></td>
                     <td className="px-6 py-4 text-sm text-gray-400">
                       {t.validated_ticket?.validated_at ? formatDate(t.validated_ticket.validated_at) : '-'}
