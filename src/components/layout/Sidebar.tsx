@@ -19,6 +19,7 @@ import {
   Clock,
   CreditCard,
   Ban,
+  Rss,
 } from 'lucide-react';
 
 const navigation = [
@@ -32,6 +33,7 @@ const navigation = [
   { name: 'Transactions', href: '/payments', icon: CreditCard, minLevel: 2, section: 'Gestion' },
   { name: 'Clients', href: '/clients', icon: UserCircle, minLevel: 2, section: 'Gestion' },
   { name: 'Lotos', href: '/lotteries', icon: Dices, minLevel: 3, section: 'Administration' },
+  { name: 'Flux RSS', href: '/rss-feeds', icon: Rss, minLevel: 3, section: 'Administration' },
   { name: 'Utilisateurs', href: '/users', icon: Users, minLevel: 2, section: 'Administration' },
   { name: 'Journal', href: '/audit-logs', icon: ScrollText, minLevel: 2, section: 'Administration' },
   { name: 'Configuration', href: '/settings', icon: Settings, minLevel: 3, section: 'Administration' },
