@@ -9,6 +9,8 @@ export interface LotteryRule {
   bonus_numbers_max: number | null;
   price: string | null;
   currency: string;
+  draw_days: number[] | null;
+  cutoff_hour: number | null;
 }
 
 export interface Lottery {

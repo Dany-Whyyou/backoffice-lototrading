@@ -34,6 +34,8 @@ export default function EditLotteryPage({ params }: { params: Promise<{ id: stri
       bonus_numbers_max: number;
       price: string;
       currency: string;
+      draw_days: number[];
+      cutoff_hour: number;
     };
   } | null>(null);
 
@@ -52,6 +54,8 @@ export default function EditLotteryPage({ params }: { params: Promise<{ id: stri
         bonus_numbers_max: lottery.rule?.bonus_numbers_max ?? 12,
         price: lottery.rule?.price ?? '',
         currency: lottery.rule?.currency ?? 'XAF',
+        draw_days: (lottery.rule?.draw_days as number[] | null) ?? [],
+        cutoff_hour: lottery.rule?.cutoff_hour ?? 17,
       },
     });
   }
@@ -84,7 +88,7 @@ export default function EditLotteryPage({ params }: { params: Promise<{ id: stri
     }
   };
 
-  const updateRules = (key: string, value: string | number) => {
+  const updateRules = (key: string, value: string | number | number[]) => {
     if (!form) return;
     setForm({ ...form, rules: { ...form.rules, [key]: value } });
   };
@@ -202,6 +206,54 @@ export default function EditLotteryPage({ params }: { params: Promise<{ id: stri
                   <option value="EUR">EUR</option>
                 </select>
               </div>
+            </div>
+          </div>
+
+          <div className="rounded-xl bg-white p-6 ring-1 ring-gray-100 space-y-4">
+            <h3 className="text-sm font-semibold text-gray-900">Jours de tirage</h3>
+            <div className="flex flex-wrap gap-2">
+              {[
+                { day: 1, label: 'Lundi' },
+                { day: 2, label: 'Mardi' },
+                { day: 3, label: 'Mercredi' },
+                { day: 4, label: 'Jeudi' },
+                { day: 5, label: 'Vendredi' },
+                { day: 6, label: 'Samedi' },
+                { day: 7, label: 'Dimanche' },
+              ].map(({ day, label }) => {
+                const selected = form.rules.draw_days.includes(day);
+                return (
+                  <button
+                    key={day}
+                    type="button"
+                    onClick={() => {
+                      const days = selected
+                        ? form.rules.draw_days.filter((d: number) => d !== day)
+                        : [...form.rules.draw_days, day].sort();
+                      setForm({ ...form, rules: { ...form.rules, draw_days: days } });
+                    }}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      selected
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    }`}
+                  >
+                    {label}
+                  </button>
+                );
+              })}
+            </div>
+            <div className="max-w-xs">
+              <label className="block text-xs font-medium text-gray-500 mb-1">Heure limite d&apos;inscription (jour de tirage)</label>
+              <select
+                value={form.rules.cutoff_hour}
+                onChange={(e) => updateRules('cutoff_hour', parseInt(e.target.value))}
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
+              >
+                {Array.from({ length: 24 }, (_, i) => (
+                  <option key={i} value={i}>{i.toString().padStart(2, '0')}:00</option>
+                ))}
+              </select>
             </div>
           </div>
 
