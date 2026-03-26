@@ -18,8 +18,14 @@ export default function LoginPage() {
     setError('');
     setLoading(true);
     try {
-      await login(email, password);
-      router.push('/');
+      const result = await login(email, password);
+      if (result.kyc_required && result.kyc_status === 'pending_kyc') {
+        router.push('/admin-kyc');
+      } else if (result.kyc_required && result.kyc_status === 'rejected') {
+        router.push('/admin-kyc');
+      } else {
+        router.push('/');
+      }
     } catch {
       setError('Identifiants incorrects');
     } finally {
