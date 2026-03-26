@@ -278,8 +278,12 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
                 <Button
                   size="sm"
                   onClick={async () => {
-                    await api.put(`/admin/users/${id}`, { generate_referral_code: true });
-                    queryClient.invalidateQueries({ queryKey: ['user', id] });
+                    try {
+                      await api.put(`/admin/users/${id}`, { generate_referral_code: true });
+                      queryClient.invalidateQueries({ queryKey: ['user', id] });
+                    } catch (err) {
+                      alert('Erreur: ' + ((err as { response?: { data?: { message?: string } } })?.response?.data?.message || 'Echec'));
+                    }
                   }}
                 >
                   Generer un code
