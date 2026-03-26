@@ -13,6 +13,7 @@ interface RssFeed {
   name: string;
   url: string;
   is_active: boolean;
+  use_for_results: boolean;
   created_at: string;
 }
 
@@ -250,7 +251,13 @@ export default function RssFeedsPage() {
                         ? 'inline-flex items-center rounded-full bg-green-50 px-2 py-0.5 text-[10px] font-medium text-green-700 ring-1 ring-inset ring-green-600/20'
                         : 'inline-flex items-center rounded-full bg-gray-50 px-2 py-0.5 text-[10px] font-medium text-gray-500 ring-1 ring-inset ring-gray-200'
                       }>
-                        {feed.is_active ? 'Actif' : 'Inactif'}
+                        {feed.is_active ? 'Slider' : 'Slider off'}
+                      </span>
+                      <span className={feed.use_for_results
+                        ? 'inline-flex items-center rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-medium text-blue-700 ring-1 ring-inset ring-blue-600/20'
+                        : 'inline-flex items-center rounded-full bg-gray-50 px-2 py-0.5 text-[10px] font-medium text-gray-500 ring-1 ring-inset ring-gray-200'
+                      }>
+                        {feed.use_for_results ? 'Resultats' : 'Resultats off'}
                       </span>
                     </div>
                     <p className="text-xs text-gray-400 truncate mt-0.5">{feed.url}</p>
@@ -277,7 +284,27 @@ export default function RssFeedsPage() {
                           : 'bg-green-50 text-green-700 hover:bg-green-100'
                       }`}
                     >
-                      {isToggling ? 'Chargement...' : (feed.is_active ? 'Desactiver' : 'Activer')}
+                      {isToggling ? '...' : (feed.is_active ? 'Slider off' : 'Slider on')}
+                    </button>
+                    <button
+                      onClick={async () => {
+                        if (isBusy) return;
+                        setLoadingId(feed.id);
+                        try {
+                          await api.put(`/admin/rss-feeds/${feed.id}`, { use_for_results: !feed.use_for_results });
+                          queryClient.invalidateQueries({ queryKey: ['rss-feeds'] });
+                        } finally {
+                          setLoadingId(null);
+                        }
+                      }}
+                      disabled={isBusy}
+                      className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+                        feed.use_for_results
+                          ? 'bg-blue-100 text-blue-600 hover:bg-blue-200'
+                          : 'bg-blue-50 text-blue-700 hover:bg-blue-100'
+                      }`}
+                    >
+                      {feed.use_for_results ? 'Resultats off' : 'Resultats on'}
                     </button>
                     <button
                       onClick={() => handleDelete(feed)}
