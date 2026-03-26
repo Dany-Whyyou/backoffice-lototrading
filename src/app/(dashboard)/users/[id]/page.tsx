@@ -9,7 +9,9 @@ import api from '@/lib/api';
 import { formatDate } from '@/lib/utils';
 import { ROLE_LABELS } from '@/constants/roles';
 import type { User } from '@/types/user';
-import { CheckCircle, Activity, Shield, ArrowLeft } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
+import { ROLE_LEVELS } from '@/constants/roles';
+import { CheckCircle, Activity, Shield, ArrowLeft, ShieldCheck, ImageIcon, Loader2 } from 'lucide-react';
 
 interface AuditLogEntry {
   id: number;
@@ -36,6 +38,9 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
   const router = useRouter();
   const queryClient = useQueryClient();
 
+  const { user: currentUser } = useAuth();
+  const [kycLoading, setKycLoading] = useState(false);
+
   const { data, isLoading } = useQuery({
     queryKey: ['user', id],
     queryFn: () => api.get(`/admin/users/${id}`).then((res) => res.data as UserDetail),
@@ -45,6 +50,29 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
     await api.put(`/admin/users/${id}/toggle-status`);
     queryClient.invalidateQueries({ queryKey: ['user', id] });
     queryClient.invalidateQueries({ queryKey: ['users'] });
+  };
+
+  const handleApproveKyc = async () => {
+    if (!confirm('Approuver le KYC de cet utilisateur ?')) return;
+    setKycLoading(true);
+    try {
+      await api.put(`/admin/users/${id}/review-kyc`, { action: 'approve' });
+      queryClient.invalidateQueries({ queryKey: ['user', id] });
+    } finally {
+      setKycLoading(false);
+    }
+  };
+
+  const handleRejectKyc = async () => {
+    const reason = prompt('Raison du refus :');
+    if (!reason) return;
+    setKycLoading(true);
+    try {
+      await api.put(`/admin/users/${id}/review-kyc`, { action: 'reject', reason });
+      queryClient.invalidateQueries({ queryKey: ['user', id] });
+    } finally {
+      setKycLoading(false);
+    }
   };
 
   const handleResetPassword = async () => {
@@ -135,6 +163,116 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
             </div>
           </div>
         </div>
+
+        {/* KYC Section - only for referent/commercial and if current user can review */}
+        {(user.role === 'referent' || user.role === 'commercial') && currentUser && ROLE_LEVELS[currentUser.role] >= 3 && (
+          <div className="rounded-xl bg-white ring-1 ring-gray-100 p-6 shadow-sm">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="h-4 w-4 text-gray-400" />
+                <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Verification KYC</h3>
+              </div>
+              <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset ${
+                user.kyc_status === 'approved' ? 'bg-green-50 text-green-700 ring-green-600/20' :
+                user.kyc_status === 'under_review' ? 'bg-yellow-50 text-yellow-700 ring-yellow-600/20' :
+                user.kyc_status === 'rejected' ? 'bg-red-50 text-red-700 ring-red-600/20' :
+                'bg-gray-50 text-gray-500 ring-gray-200'
+              }`}>
+                {user.kyc_status === 'approved' ? 'Approuve' :
+                 user.kyc_status === 'under_review' ? 'En attente' :
+                 user.kyc_status === 'rejected' ? 'Rejete' :
+                 user.kyc_status === 'pending_kyc' ? 'Non soumis' : user.kyc_status ?? 'N/A'}
+              </span>
+            </div>
+
+            {/* Documents */}
+            {(user.kyc_document_path || user.kyc_selfie_path) && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+                <div>
+                  <p className="text-gray-400 text-xs mb-2">Piece d&apos;identite</p>
+                  {user.kyc_document_path ? (
+                    <div className="relative rounded-lg border border-gray-200 overflow-hidden bg-gray-50">
+                      <a href={`https://loto-trading.project-preview.ovh/${user.kyc_document_path}`} target="_blank" rel="noopener noreferrer" className="block">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={`https://loto-trading.project-preview.ovh/${user.kyc_document_path}`}
+                          alt="Document KYC"
+                          className="w-full h-auto max-h-72 object-contain"
+                          onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                        />
+                      </a>
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-center h-32 rounded-lg border border-dashed border-gray-200 bg-gray-50 text-gray-400">
+                      <div className="text-center">
+                        <ImageIcon className="h-6 w-6 mx-auto mb-1.5" />
+                        <p className="text-xs">Aucun document</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                <div>
+                  <p className="text-gray-400 text-xs mb-2">Selfie</p>
+                  {user.kyc_selfie_path ? (
+                    <div className="relative rounded-lg border border-gray-200 overflow-hidden bg-gray-50">
+                      <a href={`https://loto-trading.project-preview.ovh/${user.kyc_selfie_path}`} target="_blank" rel="noopener noreferrer" className="block">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={`https://loto-trading.project-preview.ovh/${user.kyc_selfie_path}`}
+                          alt="Selfie KYC"
+                          className="w-full h-auto max-h-72 object-contain"
+                          onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                        />
+                      </a>
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-center h-32 rounded-lg border border-dashed border-gray-200 bg-gray-50 text-gray-400">
+                      <div className="text-center">
+                        <ImageIcon className="h-6 w-6 mx-auto mb-1.5" />
+                        <p className="text-xs">Aucun selfie</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Approve / Reject buttons */}
+            {user.kyc_status === 'under_review' && (
+              <div className="flex gap-3">
+                <Button onClick={handleApproveKyc} disabled={kycLoading}>
+                  {kycLoading && <Loader2 className="h-4 w-4 mr-1 animate-spin" />}
+                  Approuver
+                </Button>
+                <Button variant="danger" onClick={handleRejectKyc} disabled={kycLoading}>
+                  Rejeter
+                </Button>
+              </div>
+            )}
+
+            {user.kyc_status === 'approved' && (
+              <div className="flex items-center gap-2 rounded-lg bg-green-50 px-4 py-3 ring-1 ring-inset ring-green-200">
+                <CheckCircle className="h-4 w-4 text-green-600" />
+                <p className="text-sm text-green-700">KYC approuve</p>
+              </div>
+            )}
+
+            {user.kyc_status === 'rejected' && (
+              <div className="flex items-center gap-2 rounded-lg bg-red-50 px-4 py-3 ring-1 ring-inset ring-red-200">
+                <ShieldCheck className="h-4 w-4 text-red-600" />
+                <p className="text-sm text-red-700">KYC rejete</p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Referral code for commercials */}
+        {user.role === 'commercial' && user.referral_code && (
+          <div className="rounded-xl bg-indigo-50 ring-1 ring-indigo-200 p-5 shadow-sm">
+            <p className="text-xs text-indigo-500 mb-1">Code de parrainage</p>
+            <p className="text-2xl font-bold text-indigo-700 font-mono tracking-wider">{user.referral_code}</p>
+          </div>
+        )}
 
         {/* Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
