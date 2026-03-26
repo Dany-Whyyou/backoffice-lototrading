@@ -191,21 +191,86 @@ function CommercialDashboard({ data }: { data: Record<string, unknown> }) {
         <StatCard label="Tickets joues" value={data.total_tickets_played as number} icon={Ticket} color="text-purple-600" bg="bg-purple-50" ring="ring-purple-200" />
       </div>
 
-      {/* Progress to next tier */}
+      {/* Tier milestones */}
       <div className="rounded-xl bg-white p-5 ring-1 ring-gray-100">
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-2">
-            <Target className="h-5 w-5 text-indigo-600" />
-            <p className="text-sm font-semibold text-gray-900">Progression palier {progress.current_tier + 1}</p>
-          </div>
-          <p className="text-sm text-gray-500">{data.total_clients as number} / {progress.next_tier_at} clients</p>
+        <div className="flex items-center gap-2 mb-5">
+          <Target className="h-5 w-5 text-indigo-600" />
+          <p className="text-sm font-semibold text-gray-900">Vos paliers</p>
+          <span className="ml-auto text-xs text-gray-400">{data.total_clients as number} client(s) au total</span>
         </div>
-        <div className="w-full bg-gray-100 rounded-full h-3">
-          <div className="h-3 rounded-full bg-indigo-500 transition-all" style={{ width: `${Math.min(100, (progress.progress_to_next / tierConfig.users_per_tier) * 100)}%` }} />
+
+        {/* Visual milestones */}
+        <div className="space-y-3">
+          {Array.from({ length: Math.max(5, progress.current_tier + 3) }, (_, i) => {
+            const tierNum = i + 1;
+            const target = tierNum * tierConfig.users_per_tier;
+            const totalClients = data.total_clients as number;
+            const isCompleted = totalClients >= target;
+            const isCurrent = !isCompleted && totalClients >= (tierNum - 1) * tierConfig.users_per_tier;
+            const progressPct = isCurrent
+              ? Math.round(((totalClients % tierConfig.users_per_tier) / tierConfig.users_per_tier) * 100)
+              : isCompleted ? 100 : 0;
+
+            return (
+              <div key={tierNum} className={`flex items-center gap-3 rounded-lg p-3 transition-all ${
+                isCompleted ? 'bg-green-50 ring-1 ring-green-200' :
+                isCurrent ? 'bg-indigo-50 ring-1 ring-indigo-200' :
+                'bg-gray-50'
+              }`}>
+                {/* Icon */}
+                <div className={`flex h-10 w-10 items-center justify-center rounded-full shrink-0 ${
+                  isCompleted ? 'bg-green-500 text-white' :
+                  isCurrent ? 'bg-indigo-500 text-white' :
+                  'bg-gray-200 text-gray-400'
+                }`}>
+                  {isCompleted ? (
+                    <CheckCircle className="h-5 w-5" />
+                  ) : (
+                    <span className="text-sm font-bold">{tierNum}</span>
+                  )}
+                </div>
+
+                {/* Content */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between">
+                    <p className={`text-sm font-semibold ${
+                      isCompleted ? 'text-green-700' :
+                      isCurrent ? 'text-indigo-700' :
+                      'text-gray-400'
+                    }`}>
+                      Palier {tierNum} — {target} clients
+                    </p>
+                    <span className={`text-sm font-bold ${
+                      isCompleted ? 'text-green-600' :
+                      isCurrent ? 'text-indigo-600' :
+                      'text-gray-300'
+                    }`}>
+                      {tierConfig.bonus_per_tier.toLocaleString('fr-FR')} FCFA
+                    </span>
+                  </div>
+
+                  {isCurrent && (
+                    <div className="mt-1.5">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-[10px] text-indigo-500">{progressPct}%</span>
+                        <span className="text-[10px] text-indigo-500">
+                          encore {target - totalClients} client(s)
+                        </span>
+                      </div>
+                      <div className="w-full bg-indigo-100 rounded-full h-2">
+                        <div className="h-2 rounded-full bg-indigo-500 transition-all" style={{ width: `${progressPct}%` }} />
+                      </div>
+                    </div>
+                  )}
+
+                  {isCompleted && (
+                    <p className="text-[10px] text-green-500 mt-0.5">Palier atteint !</p>
+                  )}
+                </div>
+              </div>
+            );
+          })}
         </div>
-        <p className="mt-2 text-xs text-gray-400">
-          Encore {progress.remaining} client(s) pour debloquer {tierConfig.bonus_per_tier.toLocaleString('fr-FR')} FCFA
-        </p>
       </div>
 
       {/* Earnings */}
