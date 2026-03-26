@@ -20,6 +20,7 @@ import {
   CreditCard,
   Ban,
   Rss,
+  PieChart,
 } from 'lucide-react';
 
 const navigation = [
@@ -40,6 +41,7 @@ const navigation = [
   { name: 'Lotos', href: '/lotteries', icon: Dices, minLevel: 4, section: 'Administration' },
   { name: 'Flux RSS', href: '/rss-feeds', icon: Rss, minLevel: 4, section: 'Administration' },
   { name: 'Utilisateurs', href: '/users', icon: Users, minLevel: 3, section: 'Administration' },
+  { name: 'Matrice', href: '/matrix', icon: PieChart, minLevel: 4, section: 'Administration' },
   { name: 'Journal', href: '/audit-logs', icon: ScrollText, minLevel: 3, section: 'Administration' },
   { name: 'Configuration', href: '/settings', icon: Settings, minLevel: 4, section: 'Administration' },
 ];
