@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import Header from '@/components/layout/Header';
 import Button from '@/components/ui/Button';
+import { useAuth } from '@/hooks/useAuth';
+import { ROLE_LEVELS } from '@/constants/roles';
 import StatusBadge from '@/components/ui/StatusBadge';
 import api from '@/lib/api';
 import { formatDate } from '@/lib/utils';
@@ -35,6 +37,8 @@ export default function ClientDetailPage({ params }: { params: Promise<{ id: str
   const { id } = use(params);
   const router = useRouter();
   const queryClient = useQueryClient();
+  const { user: currentUser } = useAuth();
+  const canEdit = currentUser ? ROLE_LEVELS[currentUser.role] >= 3 : false; // supervisor+
 
   const [showRejectForm, setShowRejectForm] = useState(false);
   const [selectedReason, setSelectedReason] = useState('');
@@ -118,13 +122,15 @@ export default function ClientDetailPage({ params }: { params: Promise<{ id: str
               <ArrowLeft className="h-4 w-4" />
               Retour
             </button>
-            <Button variant="secondary" onClick={() => router.push(`/clients/${id}/edit`)}>Modifier</Button>
-            <Button
-              variant={client.is_active ? 'danger' : 'primary'}
-              onClick={handleToggleStatus}
-            >
-              {client.is_active ? 'Desactiver' : 'Activer'}
-            </Button>
+            {canEdit && <Button variant="secondary" onClick={() => router.push(`/clients/${id}/edit`)}>Modifier</Button>}
+            {canEdit && (
+              <Button
+                variant={client.is_active ? 'danger' : 'primary'}
+                onClick={handleToggleStatus}
+              >
+                {client.is_active ? 'Desactiver' : 'Activer'}
+              </Button>
+            )}
           </div>
         }
       />
@@ -166,7 +172,7 @@ export default function ClientDetailPage({ params }: { params: Promise<{ id: str
         </div>
 
         {/* KYC Section */}
-        <div className="rounded-xl bg-white ring-1 ring-gray-100 p-6 shadow-sm">
+        {canEdit && <div className="rounded-xl bg-white ring-1 ring-gray-100 p-6 shadow-sm">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <ShieldCheck className="h-4 w-4 text-gray-400" />
@@ -405,7 +411,7 @@ export default function ClientDetailPage({ params }: { params: Promise<{ id: str
               </button>
             </div>
           )}
-        </div>
+        </div>}
 
         {/* Stats */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
