@@ -23,20 +23,25 @@ import {
 } from 'lucide-react';
 
 const navigation = [
-  // Gestion
+  // Dashboard - everyone
   { name: 'Dashboard', href: '/', icon: LayoutDashboard, minLevel: 1, section: 'Tableau de bord' },
-  { name: 'Tickets en attente', href: '/tickets/pending', icon: Ticket, minLevel: 1, section: 'Gestion' },
-  { name: 'Tickets en cours', href: '/tickets/processing', icon: Clock, minLevel: 1, section: 'Gestion' },
-  { name: 'Tickets valides', href: '/tickets/validated', icon: CheckCircle, minLevel: 1, section: 'Gestion' },
-  { name: 'Tickets annules', href: '/tickets/cancelled', icon: Ban, minLevel: 1, section: 'Gestion' },
-  { name: 'KYC en attente', href: '/kyc', icon: ShieldCheck, minLevel: 1, section: 'Gestion' },
-  { name: 'Transactions', href: '/payments', icon: CreditCard, minLevel: 2, section: 'Gestion' },
-  { name: 'Clients', href: '/clients', icon: UserCircle, minLevel: 2, section: 'Gestion' },
-  { name: 'Lotos', href: '/lotteries', icon: Dices, minLevel: 3, section: 'Administration' },
-  { name: 'Flux RSS', href: '/rss-feeds', icon: Rss, minLevel: 3, section: 'Administration' },
-  { name: 'Utilisateurs', href: '/users', icon: Users, minLevel: 2, section: 'Administration' },
-  { name: 'Journal', href: '/audit-logs', icon: ScrollText, minLevel: 2, section: 'Administration' },
-  { name: 'Configuration', href: '/settings', icon: Settings, minLevel: 3, section: 'Administration' },
+  // Tickets - referent (2) and above
+  { name: 'Tickets en attente', href: '/tickets/pending', icon: Ticket, minLevel: 2, section: 'Gestion' },
+  { name: 'Tickets en cours', href: '/tickets/processing', icon: Clock, minLevel: 2, section: 'Gestion' },
+  { name: 'Tickets valides', href: '/tickets/validated', icon: CheckCircle, minLevel: 2, section: 'Gestion' },
+  { name: 'Tickets annules', href: '/tickets/cancelled', icon: Ban, minLevel: 3, section: 'Gestion' },
+  { name: 'A valider', href: '/tickets/review', icon: ShieldCheck, minLevel: 3, section: 'Gestion' },
+  // KYC, Transactions - supervisor (3) and above
+  { name: 'KYC en attente', href: '/kyc', icon: ShieldCheck, minLevel: 3, section: 'Gestion' },
+  { name: 'Transactions', href: '/payments', icon: CreditCard, minLevel: 3, section: 'Gestion' },
+  // Clients - commercial (1) sees own, supervisor (3)+ sees all
+  { name: 'Clients', href: '/clients', icon: UserCircle, minLevel: 1, section: 'Gestion' },
+  // Administration - admin (4) and above
+  { name: 'Lotos', href: '/lotteries', icon: Dices, minLevel: 4, section: 'Administration' },
+  { name: 'Flux RSS', href: '/rss-feeds', icon: Rss, minLevel: 4, section: 'Administration' },
+  { name: 'Utilisateurs', href: '/users', icon: Users, minLevel: 3, section: 'Administration' },
+  { name: 'Journal', href: '/audit-logs', icon: ScrollText, minLevel: 3, section: 'Administration' },
+  { name: 'Configuration', href: '/settings', icon: Settings, minLevel: 4, section: 'Administration' },
 ];
 
 export default function Sidebar() {

@@ -14,7 +14,8 @@ const ROLE_BADGE_COLORS: Record<Role, string> = {
   super_admin: 'bg-purple-50 text-purple-700 ring-purple-600/20',
   admin: 'bg-blue-50 text-blue-700 ring-blue-600/20',
   supervisor: 'bg-amber-50 text-amber-700 ring-amber-600/20',
-  operator: 'bg-gray-50 text-gray-700 ring-gray-600/20',
+  referent: 'bg-green-50 text-green-700 ring-green-600/20',
+  commercial: 'bg-orange-50 text-orange-700 ring-orange-600/20',
 };
 
 export default function UsersPage() {

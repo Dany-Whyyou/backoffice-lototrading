@@ -4,17 +4,19 @@ export const ROLE_LABELS: Record<Role, string> = {
   super_admin: 'Super Admin',
   admin: 'Admin',
   supervisor: 'Superviseur',
-  operator: 'Opérateur',
+  referent: 'Referent',
+  commercial: 'Commercial',
 };
 
 export const ROLE_LEVELS: Record<Role, number> = {
-  super_admin: 4,
-  admin: 3,
-  supervisor: 2,
-  operator: 1,
+  super_admin: 5,
+  admin: 4,
+  supervisor: 3,
+  referent: 2,
+  commercial: 1,
 };
 
-export const ROLES_LIST: Role[] = ['super_admin', 'admin', 'supervisor', 'operator'];
+export const ROLES_LIST: Role[] = ['super_admin', 'admin', 'supervisor', 'referent', 'commercial'];
 
 export function canManageRole(currentRole: Role, targetRole: Role): boolean {
   if (currentRole === 'super_admin') return true;

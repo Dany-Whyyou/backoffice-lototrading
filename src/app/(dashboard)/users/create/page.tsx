@@ -9,7 +9,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { getManageableRoles, ROLE_LABELS } from '@/constants/roles';
 
 export default function CreateUserPage() {
-  const [form, setForm] = useState({ name: '', email: '', role: 'operator' });
+  const [form, setForm] = useState({ name: '', email: '', role: 'referent' });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [tempPassword, setTempPassword] = useState<string | null>(null);
