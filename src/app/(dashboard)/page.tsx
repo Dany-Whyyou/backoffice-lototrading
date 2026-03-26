@@ -41,7 +41,6 @@ function AdminDashboard({ data }: { data: Record<string, unknown> }) {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <StatCard label="En attente" value={data.pending_tickets as number} icon={Clock} color="text-yellow-600" bg="bg-yellow-50" ring="ring-yellow-200" />
         <StatCard label="En traitement" value={data.processing_tickets as number} icon={AlertCircle} color="text-blue-600" bg="bg-blue-50" ring="ring-blue-200" />
-        <StatCard label="A valider" value={data.pending_review as number ?? 0} icon={ShieldCheck} color="text-orange-600" bg="bg-orange-50" ring="ring-orange-200" />
         <StatCard label="Valides aujourd'hui" value={data.validated_today as number} icon={CheckCircle} color="text-green-600" bg="bg-green-50" ring="ring-green-200" />
         <StatCard label="Total valides" value={data.total_validated as number} icon={TrendingUp} color="text-indigo-600" bg="bg-indigo-50" ring="ring-indigo-200" />
         <StatCard label="Clients actifs" value={data.active_clients as number} icon={Users} color="text-cyan-600" bg="bg-cyan-50" ring="ring-cyan-200" />

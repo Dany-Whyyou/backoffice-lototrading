@@ -31,7 +31,6 @@ const navigation = [
   { name: 'Tickets en cours', href: '/tickets/processing', icon: Clock, minLevel: 2, section: 'Gestion' },
   { name: 'Tickets valides', href: '/tickets/validated', icon: CheckCircle, minLevel: 2, section: 'Gestion' },
   { name: 'Tickets annules', href: '/tickets/cancelled', icon: Ban, minLevel: 3, section: 'Gestion' },
-  { name: 'A valider', href: '/tickets/review', icon: ShieldCheck, minLevel: 3, section: 'Gestion' },
   // KYC, Transactions - supervisor (3) and above
   { name: 'KYC en attente', href: '/kyc', icon: ShieldCheck, minLevel: 3, section: 'Gestion' },
   { name: 'Transactions', href: '/payments', icon: CreditCard, minLevel: 3, section: 'Gestion' },

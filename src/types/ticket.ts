@@ -2,7 +2,7 @@ import type { Client } from './client';
 import type { Lottery } from './lottery';
 import type { User } from './user';
 
-export type TicketStatus = 'draft' | 'pending' | 'processing' | 'pending_review' | 'validated' | 'cancelled';
+export type TicketStatus = 'draft' | 'pending' | 'processing' | 'validated' | 'cancelled';
 
 export interface TicketSelection {
   id: number;
