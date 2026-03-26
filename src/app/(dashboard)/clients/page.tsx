@@ -87,6 +87,7 @@ export default function ClientsPage() {
                   <th className="px-6 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">Telephone</th>
                   <th className="px-6 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">Email</th>
                   <th className="px-6 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">Tickets</th>
+                  <th className="px-6 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">Code</th>
                   <th className="px-6 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">KYC</th>
                   <th className="px-6 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">Statut</th>
                   <th className="px-6 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">Inscrit le</th>
@@ -109,6 +110,9 @@ export default function ClientsPage() {
                       <span className="inline-flex items-center justify-center h-6 min-w-[1.5rem] rounded-full bg-blue-50 text-xs font-semibold text-blue-700">
                         {c.ticket_requests_count ?? 0}
                       </span>
+                    </td>
+                    <td className="px-6 py-4 text-xs font-mono text-gray-500">
+                      {(c as unknown as { referral_code_used?: string }).referral_code_used ?? '-'}
                     </td>
                     <td className="px-6 py-4">
                       <span className={
