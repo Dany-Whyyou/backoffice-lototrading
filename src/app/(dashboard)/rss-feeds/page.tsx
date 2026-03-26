@@ -14,6 +14,8 @@ interface RssFeed {
   url: string;
   is_active: boolean;
   use_for_results: boolean;
+  feed_type: 'rss' | 'link';
+  image_url: string | null;
   created_at: string;
 }
 
@@ -21,7 +23,7 @@ export default function RssFeedsPage() {
   const queryClient = useQueryClient();
   const [adding, setAdding] = useState(false);
   const [savingFeed, setSavingFeed] = useState(false);
-  const [newFeed, setNewFeed] = useState({ name: '', url: '' });
+  const [newFeed, setNewFeed] = useState({ name: '', url: '', feed_type: 'rss' as 'rss' | 'link', image_url: '' });
   const [maxNews, setMaxNews] = useState('');
   const [savingMax, setSavingMax] = useState(false);
   const [loadingId, setLoadingId] = useState<number | null>(null);
@@ -47,9 +49,16 @@ export default function RssFeedsPage() {
     if (!newFeed.name || !newFeed.url || savingFeed) return;
     setSavingFeed(true);
     try {
-      await api.post('/admin/rss-feeds', { ...newFeed, is_active: true });
+      await api.post('/admin/rss-feeds', {
+        name: newFeed.name,
+        url: newFeed.url,
+        feed_type: newFeed.feed_type,
+        image_url: newFeed.image_url || undefined,
+        is_active: true,
+        use_for_results: newFeed.feed_type === 'rss',
+      });
       setAdding(false);
-      setNewFeed({ name: '', url: '' });
+      setNewFeed({ name: '', url: '', feed_type: 'rss', image_url: '' });
       queryClient.invalidateQueries({ queryKey: ['rss-feeds'] });
     } finally {
       setSavingFeed(false);
@@ -157,7 +166,24 @@ export default function RssFeedsPage() {
         {/* Add form */}
         {adding && (
           <div className="rounded-xl bg-white p-5 ring-1 ring-blue-200 space-y-3">
-            <h3 className="text-sm font-semibold text-gray-900">Nouveau flux RSS</h3>
+            <h3 className="text-sm font-semibold text-gray-900">Nouveau flux</h3>
+            {/* Type selector */}
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => setNewFeed({ ...newFeed, feed_type: 'rss' })}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${newFeed.feed_type === 'rss' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600'}`}
+              >
+                Flux RSS
+              </button>
+              <button
+                type="button"
+                onClick={() => setNewFeed({ ...newFeed, feed_type: 'link' })}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${newFeed.feed_type === 'link' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600'}`}
+              >
+                Lien simple
+              </button>
+            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <input
                 type="text"
@@ -169,13 +195,23 @@ export default function RssFeedsPage() {
               />
               <input
                 type="url"
-                placeholder="URL du flux RSS"
+                placeholder={newFeed.feed_type === 'rss' ? 'URL du flux RSS' : 'URL du lien'}
                 value={newFeed.url}
                 onChange={(e) => setNewFeed({ ...newFeed, url: e.target.value })}
                 disabled={savingFeed}
                 className="rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 disabled:opacity-50"
               />
             </div>
+            {newFeed.feed_type === 'link' && (
+              <input
+                type="url"
+                placeholder="URL de l'image (optionnel)"
+                value={newFeed.image_url}
+                onChange={(e) => setNewFeed({ ...newFeed, image_url: e.target.value })}
+                disabled={savingFeed}
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 disabled:opacity-50"
+              />
+            )}
             <div className="flex gap-2">
               <Button onClick={handleAdd} disabled={savingFeed} size="sm">
                 {savingFeed && <Loader2 className="h-3 w-3 mr-1 animate-spin" />}
@@ -242,7 +278,7 @@ export default function RssFeedsPage() {
                   className={`rounded-xl bg-white p-4 ring-1 ring-gray-100 flex items-center gap-4 transition-all hover:shadow-sm ${isBusy ? 'opacity-60' : ''}`}
                 >
                   <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${feed.is_active ? 'bg-orange-50 text-orange-600' : 'bg-gray-50 text-gray-400'}`}>
-                    {isToggling ? <Loader2 className="h-5 w-5 animate-spin" /> : <Rss className="h-5 w-5" />}
+                    {isToggling ? <Loader2 className="h-5 w-5 animate-spin" /> : (feed.feed_type === 'link' ? <ExternalLink className="h-5 w-5" /> : <Rss className="h-5 w-5" />)}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
