@@ -267,10 +267,25 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
         )}
 
         {/* Referral code for commercials */}
-        {user.role === 'commercial' && user.referral_code && (
+        {user.role === 'commercial' && (
           <div className="rounded-xl bg-indigo-50 ring-1 ring-indigo-200 p-5 shadow-sm">
             <p className="text-xs text-indigo-500 mb-1">Code de parrainage</p>
-            <p className="text-2xl font-bold text-indigo-700 font-mono tracking-wider">{user.referral_code}</p>
+            {user.referral_code ? (
+              <p className="text-2xl font-bold text-indigo-700 font-mono tracking-wider">{user.referral_code}</p>
+            ) : (
+              <div className="flex items-center gap-3">
+                <p className="text-sm text-gray-400 italic">Aucun code attribue</p>
+                <Button
+                  size="sm"
+                  onClick={async () => {
+                    await api.put(`/admin/users/${id}`, { generate_referral_code: true });
+                    queryClient.invalidateQueries({ queryKey: ['user', id] });
+                  }}
+                >
+                  Generer un code
+                </Button>
+              </div>
+            )}
           </div>
         )}
 
