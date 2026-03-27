@@ -104,10 +104,18 @@ export default function Sidebar() {
 
       {/* User section */}
       <div className="border-t border-white/5 p-4">
-        <div className="mb-3 px-1">
-          <p className="text-sm font-medium text-gray-200">{user.name}</p>
-          <p className="text-xs text-gray-500 mt-0.5">{ROLE_LABELS[user.role]}</p>
-        </div>
+        <Link
+          href="/profile"
+          className="flex items-center gap-3 mb-3 px-1 rounded-lg py-2 -mx-1 hover:bg-white/5 transition-colors cursor-pointer"
+        >
+          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-xs font-bold">
+            {user.name.charAt(0).toUpperCase()}
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium text-gray-200 truncate">{user.name}</p>
+            <p className="text-xs text-gray-500">{ROLE_LABELS[user.role]}</p>
+          </div>
+        </Link>
         <button
           onClick={logout}
           className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-400 transition-all hover:bg-white/5 hover:text-gray-200"
